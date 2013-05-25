@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class InGameMenu : MonoBehaviour {
+public class InGameMenuGUI : MonoBehaviour {
     bool on = false;
     void OnGUI () {
         // Draw the menu
