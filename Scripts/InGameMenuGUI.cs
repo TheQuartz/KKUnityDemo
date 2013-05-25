@@ -7,10 +7,11 @@ public class InGameMenuGUI : MonoBehaviour {
     bool on = false;
     States state_;
     int points_;
-    
-    void OnStart() {
+    string got_quartz_;
+    void Start() {
         state_ = States.ONGAMING;
         points_ = 0;
+        got_quartz_ = "Quartz you've got:\n";
     }
     void OnGUI () {
         // Draw the menu
@@ -25,11 +26,14 @@ public class InGameMenuGUI : MonoBehaviour {
                 foreach (GameObject a in GameObject.FindGameObjectsWithTag("quartz")) {
                     Quartz quartz_script = a.GetComponent<Quartz>();
                     int level = quartz_script.GetLevel();
-                    Quartz.Colors color = quartz_script.GetColor();
-                    points_ += LEVEL_POINTS[level];
-                    print ("Level: "+level.ToString());
-                    print ("Add "+LEVEL_POINTS[level].ToString());
-                    Destroy(a);
+                    // Do NOT count the prefab
+                    if (level > 0) {
+                        Quartz.Colors color = quartz_script.GetColor();
+                        points_ += LEVEL_POINTS[level];
+                        got_quartz_ += "Level "+level+" "+color.ToString()+"\n";
+                        Destroy(a);
+                    }
+                    
                 }
                 state_ = States.ENDED;
             }
@@ -38,8 +42,10 @@ public class InGameMenuGUI : MonoBehaviour {
             Application.LoadLevel(0);
         }
         if (state_ == States.ENDED) {
-            GUI.TextArea(new Rect(200, 100, 500, 100),
-                         "You've Got "+points_.ToString()+" points");
+            string table_head;
+            GUI.TextArea(
+                new Rect(200, 100, 500, 500),
+                got_quartz_+"\nYou've Got "+points_.ToString()+" points");
         }
         
     }
