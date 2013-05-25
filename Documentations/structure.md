@@ -3,9 +3,9 @@
 
 * StartMenu(Scene)
   - Menu(GameObject)
-    + StartMenuGUI(Script)
+    * StartMenuGUI(Script)
 * GamePlay(Scene)
   - MainLogic(GameObject)
-    + MainLogic(Script)
+    * MainLogic(Script)
   - Menu(GameObject)
-    + InGameMenuGUI(Script)
+    * InGameMenuGUI(Script)
