@@ -11,10 +11,11 @@ public class MainLogic : MonoBehaviour {
     Object quartz_prefab_;
     GameObject last_quartz_;
     // Use this for initialization
-    void Start () {
+    IEnumerator Start () {
         last_quartz_ = null;
         quartz_prefab_ = GameObject.Find("Quartz");
         System.Random random = new System.Random();
+        Quartz[] quartz_array = new Quartz[QUARTZ_NUMBER];
         for (int i = 0; i < QUARTZ_NUMBER; ++i) {
             Quartz new_quartz_script = ((GameObject) Instantiate(
                 quartz_prefab_,
@@ -22,10 +23,17 @@ public class MainLogic : MonoBehaviour {
                             i/QUARTZ_PER_ROW*2.5f-4.0f,
                             0),
                 Quaternion.identity)).GetComponent<Quartz>();
-            
+            quartz_array[i] = new_quartz_script;
             new_quartz_script.SetLevel(1);
+            
 
             new_quartz_script.SetColor(colors[random.Next(0,3)]);
+            new_quartz_script.Toggle();
+        }
+        // TODO: use animation or other better way to replace wait.
+        yield return new WaitForSeconds(5);
+        for (int i = 0; i < QUARTZ_NUMBER; ++i) {
+            quartz_array[i].Toggle();
         }
     }
 	
