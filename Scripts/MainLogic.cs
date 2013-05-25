@@ -38,9 +38,6 @@ public class MainLogic : MonoBehaviour {
     }
 	
     void Update () {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            GameObject.Find("Menu").SendMessage("Toggle");
-        }
     }
     
     IEnumerator  OnCheckQuartz(GameObject quartz) {
