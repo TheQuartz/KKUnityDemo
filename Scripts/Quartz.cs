@@ -29,11 +29,13 @@ public class Quartz : MonoBehaviour {
         open_ = !open_;
     }
     void OnGUI() {
-        float x = gameObject.transform.position.x*30+200;
-        float y = -gameObject.transform.position.y*30+200;
+        Vector3 world_position = transform.position;
+        Vector3 position = Camera.main.WorldToScreenPoint(world_position);
+        float x = position.x-30;
+        float y = Screen.height-position.y;
         if (open_) {
             GUI.Label(new Rect(x, y, 100, 50),
-                      level_.ToString()+color_.ToString());
+                       level_.ToString()+" "+color_.ToString());
         } else {
             GUI.Label(new Rect(x, y, 100, 50),
                       "Unopen");
