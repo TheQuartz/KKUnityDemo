@@ -6,9 +6,11 @@ public class Quartz : MonoBehaviour {
     private int level_;
     private Colors color_;
     private bool open_ = false;
+    private GameObject main_logic_;
     // Use this for initialization
 	void Start () {
         // open_ = false;
+        main_logic_ = GameObject.Find("MainLogic");
     }
     // Set/Get quartz's level
     public void SetLevel(int level) {
@@ -46,9 +48,7 @@ public class Quartz : MonoBehaviour {
     }
     void OnMouseUp() {
         if (!open_) {
-            GameObject.Find("MainLogic").SendMessage(
-                "OnCheckQuartz", gameObject);
-            Toggle();
+            main_logic_.SendMessage("OnCheckQuartz", gameObject);
         }
     }
 }

@@ -9,10 +9,12 @@ public class MainLogic : MonoBehaviour {
         Quartz.Colors.RED, Quartz.Colors.BLUE, Quartz.Colors.YELLOW};
     
     Object quartz_prefab_;
-    GameObject last_quartz_;
+    GameObject first_quartz_;
+    GameObject second_quartz_;
     // Use this for initialization
     IEnumerator Start () {
-        last_quartz_ = null;
+        first_quartz_ = null;
+        second_quartz_ = null;
         quartz_prefab_ = GameObject.Find("Quartz");
         System.Random random = new System.Random();
         Quartz[] quartz_array = new Quartz[QUARTZ_NUMBER];
@@ -41,46 +43,52 @@ public class MainLogic : MonoBehaviour {
     }
     
     IEnumerator  OnCheckQuartz(GameObject quartz) {
-        if (last_quartz_ == null) {
-            last_quartz_ = quartz;
-        } else {
-            Quartz last_quartz_script = last_quartz_.GetComponent<Quartz>();
-            Quartz quartz_script = quartz.GetComponent<Quartz>();
-            print (last_quartz_script.GetLevel ());
-            print (quartz_script.GetLevel ());
-            if (last_quartz_script.GetLevel() != quartz_script.GetLevel()) {
+        if (first_quartz_ == null) {
+            first_quartz_ = quartz;
+            first_quartz_.SendMessage("Toggle");
+        } else if (second_quartz_ == null) {
+            second_quartz_ = quartz;
+            second_quartz_.SendMessage("Toggle");
+            Quartz first_quartz_script = first_quartz_.GetComponent<Quartz>();
+            Quartz second_quartz_script = second_quartz_.GetComponent<Quartz>();
+            
+            int first_quartz_level = first_quartz_script.GetLevel();
+            int second_quartz_level = second_quartz_script.GetLevel();
+            if (first_quartz_level != second_quartz_level) {
                 // level doesn't match, destory the two quartz
-                Destroy(last_quartz_);
-                Destroy(quartz); 
+                Destroy(first_quartz_);
+                Destroy(second_quartz_); 
             } else {
                 // TODO: use animation to replace the wait
                 yield return new WaitForSeconds(0.5f);
-                Vector3 new_position = last_quartz_.transform.position;
+                Vector3 new_position = first_quartz_.transform.position;
                 
                 
-                Quartz.Colors last_color = last_quartz_script.GetColor();
-                Quartz.Colors color = quartz_script.GetColor();
+                Quartz.Colors first_color = first_quartz_script.GetColor();
+                Quartz.Colors second_color = second_quartz_script.GetColor();
                 
-                int new_level = last_quartz_script.GetLevel();
-                Destroy(last_quartz_);
-                Destroy(quartz);
+                int new_level = first_quartz_level;
+                Destroy(first_quartz_);
+                Destroy(second_quartz_);
+                first_quartz_ = null;
+                second_quartz_ = null; 
                 Quartz new_quartz_script = ((GameObject)Instantiate(
                     quartz_prefab_,
                     new_position,
                     Quaternion.identity)).GetComponent<Quartz>();
-                if (last_color == color) {
-                    new_quartz_script.SetColor(last_color);
+                if (first_color == second_color) {
+                    new_quartz_script.SetColor(first_color);
                     new_quartz_script.SetLevel(new_level+1);
-                } else if (last_color != Quartz.Colors.BLUE &&
-                           color != Quartz.Colors.BLUE) {
+                } else if (first_color != Quartz.Colors.BLUE &&
+                           second_color != Quartz.Colors.BLUE) {
                     new_quartz_script.SetColor(Quartz.Colors.BLUE);
                     new_quartz_script.SetLevel(new_level);
-                } else if (last_color != Quartz.Colors.YELLOW &&
-                           color != Quartz.Colors.YELLOW) {
+                } else if (first_color != Quartz.Colors.YELLOW &&
+                           second_color != Quartz.Colors.YELLOW) {
                     new_quartz_script.SetColor(Quartz.Colors.YELLOW);
                     new_quartz_script.SetLevel(new_level);
-                } else if (last_color != Quartz.Colors.RED &&
-                           color != Quartz.Colors.RED) {
+                } else if (first_color != Quartz.Colors.RED &&
+                           second_color != Quartz.Colors.RED) {
                     new_quartz_script.SetColor(Quartz.Colors.RED);
                     new_quartz_script.SetLevel(new_level);
                 }
@@ -91,7 +99,8 @@ public class MainLogic : MonoBehaviour {
                 new_quartz_script.Toggle();
             }
             
-            last_quartz_ = null;
+        } else {
+            print ("You shoud not open a box with two boxes already opened");
         }
     }
 }
